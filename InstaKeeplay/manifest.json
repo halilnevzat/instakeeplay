@@ -1,0 +1,33 @@
+{
+  
+  "name": "InstaKeeplay",
+  "version": "1.0",
+  "manifest_version": 3,
+  "author": "iletisim@halilnevzat.com",  
+  "description": "Disables instagram pause video on screen change. developed by HalilNevzat",
+  "permissions": ["storage", "declarativeContent", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://www.instagram.com/*"
+  ],"action": {
+    "default_popup": "popup.html",
+    "default_icons": {
+      "16": "16.png",
+      "32": "32.png",
+      "48": "48.png",
+      "128": "128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["content.js"],
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "16.png",
+    "32": "32.png",
+    "48": "48.png",
+    "128": "128.png"
+  }
+}
