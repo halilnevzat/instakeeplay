@@ -1,0 +1,21 @@
+// Override the document.hidden property
+Object.defineProperty(document, 'hidden', {
+    get: function() {
+        return false; // Always return false to indicate the tab is visible
+    }
+});
+
+// Override the document.visibilityState property
+Object.defineProperty(document, 'visibilityState', {
+    get: function() {
+        return 'visible'; // Always return 'visible' to indicate the tab is visible
+    }
+});
+
+// Trigger a fake visibilitychange event to ensure Instagram updates its state
+const event = new Event('visibilitychange');
+document.dispatchEvent(event);
+
+console.log('Instagram tab visibility detection overridden. Videos should no longer pause when switching tabs.');
+
+//paste this code to console, it will prevent videos pause automatically when switching tabs.
