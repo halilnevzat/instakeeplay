@@ -1,3 +1,4 @@
+// === Part 1: Prevent videos from pausing when switching tabs ===
 // Override the document.hidden property
 Object.defineProperty(document, 'hidden', {
     get: function() {
@@ -18,4 +19,61 @@ document.dispatchEvent(event);
 
 console.log('Instagram tab visibility detection overridden. Videos should no longer pause when switching tabs.');
 
-//paste this code to console, it will prevent videos pause automatically when switching tabs.
+// === Part 2: Add a custom seek bar to Instagram videos ===
+function addSeekBarToVideos() {
+    // Select all video elements on the page
+    const videos = document.querySelectorAll('video');
+
+    videos.forEach(video => {
+        // Check if the video already has a seek bar
+        if (video.parentElement.querySelector('.custom-seek-bar')) return;
+
+        // Create a container for the seek bar
+        const seekBarContainer = document.createElement('div');
+        seekBarContainer.style.position = 'absolute';
+        seekBarContainer.style.bottom = '10px';
+        seekBarContainer.style.left = '10px';
+        seekBarContainer.style.right = '10px';
+        seekBarContainer.style.height = '5px';
+        seekBarContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        seekBarContainer.style.borderRadius = '5px';
+        seekBarContainer.style.cursor = 'pointer';
+        seekBarContainer.classList.add('custom-seek-bar');
+
+        // Create the progress bar
+        const progressBar = document.createElement('div');
+        progressBar.style.height = '100%';
+        progressBar.style.backgroundColor = '#0095f6';
+        progressBar.style.borderRadius = '5px';
+        progressBar.style.width = '0%';
+
+        // Append the progress bar to the container
+        seekBarContainer.appendChild(progressBar);
+
+        // Append the seek bar container to the video's parent element
+        video.parentElement.style.position = 'relative';
+        video.parentElement.appendChild(seekBarContainer);
+
+        // Update the progress bar as the video plays
+        video.addEventListener('timeupdate', () => {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+        });
+
+        // Allow clicking on the seek bar to jump to a specific time
+        seekBarContainer.addEventListener('click', (e) => {
+            const rect = seekBarContainer.getBoundingClientRect();
+            const clickPosition = (e.clientX - rect.left) / rect.width;
+            video.currentTime = clickPosition * video.duration;
+        });
+    });
+}
+
+// Run the function initially
+addSeekBarToVideos();
+
+// Observe the DOM for new videos (e.g., when scrolling)
+const observer = new MutationObserver(addSeekBarToVideos);
+observer.observe(document.body, { childList: true, subtree: true });
+
+console.log('Custom seek bar added to Instagram videos.');
